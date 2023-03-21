@@ -4,4 +4,5 @@ import com.example.compose.domain.model.ScheduleModel
 
 interface Repository {
     suspend fun getSchedule(groupNum:String):ScheduleModel
+    suspend fun getCurrentWeek():Int
 }

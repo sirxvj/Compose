@@ -11,7 +11,6 @@ import java.io.IOException
 
 class getScheduleUseCase {
     private val repository = RepositoryIMPL()
-    lateinit var context: Context
     operator fun invoke(groupNum:String): Flow<Resourse<ScheduleModel>> = flow{
         try {
             emit(Resourse.Loading())

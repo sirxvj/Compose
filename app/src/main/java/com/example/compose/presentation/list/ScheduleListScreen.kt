@@ -1,17 +1,22 @@
 package com.example.compose.presentation.list
 
+import android.app.LauncherActivity.ListItem
 import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -23,11 +28,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
-import com.example.compose.data.remote.dto.Thirsday
-import com.example.compose.data.remote.dto.Wednesday
+import com.example.compose.domain.model.LessonModel
 import com.example.compose.presentation.ComposeTheme
 import com.example.compose.presentation.MainViewModel
 import com.example.compose.presentation.list.component.*
+import java.time.LocalDate
 
 @Composable
 fun ScheduleListScreen(
@@ -37,10 +42,12 @@ fun ScheduleListScreen(
         mutableStateOf("")
     }
     val state = viewModel.state.value
+    val weekState = viewModel.weekState.value
+
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = Color(0xFF161616))
+            .background(color = Color.Black)
     ) {
 
         OutlinedTextField(
@@ -48,44 +55,56 @@ fun ScheduleListScreen(
             onValueChange = { searchtext.value = it },
             shape = MaterialTheme.shapes.large,
             modifier = Modifier
+                .background(Color.Black)
                 .fillMaxWidth()
                 .padding(horizontal = 10.dp, vertical = 10.dp),
             singleLine = true,
             keyboardActions = KeyboardActions(onDone = {
                 viewModel.getPrepods(searchtext.value)
-
+                viewModel.getCurrentWeek()
             })
         )
-        Box(
+        LazyColumn(
             modifier = Modifier
-                .fillMaxHeight()
                 .fillMaxWidth()
                 .padding(top = 80.dp)
-                .background(Color(0xff262626))
+                .background(Color.Black)
 
         ) {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxWidth()
-            ) {
-                state.Days?.let {
-                    items(it.MondayList) { lesson ->
-                        MondayItem(schedule = lesson)
+            if (state.Days != null && weekState.week!=null) {
+                val it = state.Days!!
+                val date = mutableStateOf(LocalDate.now())
+                date.value = LocalDate.now()
+                var cnt = 0
+                var txt = ""
+                cnt = weekState.week ?: 1
+                while (date.value.month.value < 6) {
+                    var list = it.MondayList
+                    val weekStr = mutableStateOf("")
+                    when (date.value.dayOfWeek.value) {
+                        1 -> list = it.MondayList
+                        2 -> list = it.TuesdayList
+                        3 -> list = it.WednesdayList
+                        4 -> list = it.ThursdayList
+                        5 -> list = it.FridayList
+                        6 -> list = it.SaturdayList
                     }
-                    items(it.TuesdayList) { lesson ->
-                        TuesdayItem(schedule = lesson)
+                    txt = date.value.month.toString()+" "+date.value.dayOfMonth.toString()+" " +date.value.dayOfWeek.toString() + ", week " + cnt.toString()
+                    val hdList = listOf(txt)
+                    items(hdList) { itm ->
+                        Text(text = itm, color = Color.LightGray,
+                        modifier = Modifier.padding(start = 20.dp, top = 10.dp, bottom = 0.dp))
                     }
-                    items(it.WednesdayList) { lesson ->
-                        WednesdayItem(schedule = lesson)
+
+                    items(list) {iter ->
+                        LessonItem(schedule = iter, week = cnt)
                     }
-                    items(it.ThursdayList) { lesson ->
-                        ThirsdayItem(schedule = lesson)
-                    }
-                    items(it.FridayList) { lesson ->
-                        FridayItem(schedule = lesson)
-                    }
-                    items(it.SaturdayList) { lesson ->
-                        SaturdayItem(schedule = lesson)
+                    if (date.value.dayOfWeek.toString() != "SATURDAY") date.value =
+                        date.value.plusDays(1)
+                    else {
+                        date.value = date.value.plusDays(2)
+                        cnt++;cnt%=5
+                        if(cnt == 0) cnt++
                     }
                 }
             }
