@@ -23,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.toLowerCase
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -33,6 +34,7 @@ import com.example.compose.presentation.ComposeTheme
 import com.example.compose.presentation.MainViewModel
 import com.example.compose.presentation.list.component.*
 import java.time.LocalDate
+import java.util.*
 
 @Composable
 fun ScheduleListScreen(
@@ -71,14 +73,15 @@ fun ScheduleListScreen(
                 .background(Color.Black)
 
         ) {
-            if (state.Days != null && weekState.week!=null) {
+            if (state.Days != null && weekState.week != null) {
                 val it = state.Days!!
                 val date = mutableStateOf(LocalDate.now())
                 date.value = LocalDate.now()
-                var cnt = 0
+                var Upcnt = 0
                 var txt = ""
-                cnt = weekState.week ?: 1
-                while (date.value.month.value < 6) {
+                Upcnt = weekState.week ?: 1
+                while (date.value.month.value < 6 || (date.value.month.value in 9..12)) {
+                    val cnt = Upcnt
                     var list = it.MondayList
                     val weekStr = mutableStateOf("")
                     when (date.value.dayOfWeek.value) {
@@ -89,22 +92,33 @@ fun ScheduleListScreen(
                         5 -> list = it.FridayList
                         6 -> list = it.SaturdayList
                     }
-                    txt = date.value.month.toString()+" "+date.value.dayOfMonth.toString()+" " +date.value.dayOfWeek.toString() + ", week " + cnt.toString()
+                    var month = ""
+                    for(n in date.value.month.toString().indices)
+                        if(n>0)month+=date.value.month.toString()[n].lowercase()
+                        else month+=date.value.month.toString()[n]
+
+                    var dayOfweek = ""
+                    for(n in date.value.dayOfWeek.toString().indices)
+                        if(n>0)dayOfweek+=date.value.dayOfWeek.toString()[n].lowercase()
+                        else dayOfweek+=date.value.dayOfWeek.toString()[n]
+
+                    txt = month + " " + date.value.dayOfMonth.toString() + ", " + dayOfweek+ ", week " + cnt.toString()
                     val hdList = listOf(txt)
                     items(hdList) { itm ->
-                        Text(text = itm, color = Color.LightGray,
-                        modifier = Modifier.padding(start = 20.dp, top = 10.dp, bottom = 0.dp))
+                        Text(
+                            text = itm, color = Color.LightGray,
+                            modifier = Modifier.padding(start = 20.dp, top = 10.dp, bottom = 0.dp)
+                        )
                     }
-
-                    items(list) {iter ->
+                    items(list) { iter ->
                         LessonItem(schedule = iter, week = cnt)
                     }
                     if (date.value.dayOfWeek.toString() != "SATURDAY") date.value =
                         date.value.plusDays(1)
                     else {
                         date.value = date.value.plusDays(2)
-                        cnt++;cnt%=5
-                        if(cnt == 0) cnt++
+                        Upcnt++;Upcnt %= 5
+                        if (Upcnt == 0) Upcnt++
                     }
                 }
             }

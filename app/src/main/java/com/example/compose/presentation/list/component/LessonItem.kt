@@ -93,6 +93,7 @@ fun LessonItem(
                 if (n != '[' && n != ']')
                     shit += n
             }
+            if(schedule.weekNumber.size==4) shit = ""
             Column(
                 modifier = Modifier
                     .fillMaxSize()
