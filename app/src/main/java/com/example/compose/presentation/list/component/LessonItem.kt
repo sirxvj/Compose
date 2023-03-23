@@ -1,5 +1,6 @@
 package com.example.compose.presentation.list.component
 
+import android.graphics.Paint.Align
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -17,12 +18,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.VerticalAlignmentLine
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.compose.data.remote.dto.*
 import com.example.compose.domain.model.*
+import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
 
 @Composable
@@ -30,13 +33,12 @@ fun LessonItem(
     schedule: LessonModel,
     week: Int
 ) {
-    var fls = false
-    for (n in schedule.weekNumber!!) {
-        if (n == week)
-            fls = true;
+    for (n in schedule.weekNumber!!.indices) {
+        if (schedule.weekNumber[n] == week)
+            break
+        if(n == schedule.weekNumber.size-1)
+            return
     }
-    if (!fls)
-        return
     Card(
         shape = AbsoluteRoundedCornerShape(15.dp),
         modifier = Modifier
@@ -49,15 +51,17 @@ fun LessonItem(
         )
     ) {
         Row() {
-            Column() {
+            Column(
+               horizontalAlignment = Alignment.End
+            ) {
                 Text(
                     text = schedule.startLessonTime.toString(),
-                    fontSize = 13.sp,
+                    fontSize = 14.sp,
                     modifier = Modifier.padding(top = 13.dp, start = 10.dp)
                 )
                 Text(
                     text = schedule.endLessonTime.toString(),
-                    fontSize = 13.sp,
+                    fontSize = 12.sp,
                     modifier = Modifier.padding(bottom = 10.dp, start = 10.dp)
                 )
             }
@@ -88,18 +92,19 @@ fun LessonItem(
                     modifier = Modifier.padding(start = 10.dp, end = 10.dp, bottom = 10.dp)
                 )
             }
-            var shit = "Нед. "
+            val shit = remember{mutableStateOf("")}
+            shit.value = "Нед. "
             for (n in schedule.weekNumber.toString()) {
                 if (n != '[' && n != ']')
-                    shit += n
+                    shit.value += n
             }
-            if(schedule.weekNumber.size==4) shit = ""
+            if (schedule.weekNumber.size == 4) shit.value = ""
             Column(
                 modifier = Modifier
                     .fillMaxSize()
             ) {
                 Text(
-                    text = schedule.prepodFio+"\n" + shit,
+                    text = schedule.prepodFio + "\n" + shit.value,
                     fontSize = 12.sp,
                     color = Color.LightGray,
                     modifier = Modifier

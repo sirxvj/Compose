@@ -2,7 +2,7 @@ package com.example.compose.data.remote.dto
 
 import com.example.compose.domain.model.*
 
-data class blyat(
+data class MainDto(
     val employeeDto: Any,
     val endDate: String,
     val endExamsDate: Any,
@@ -12,7 +12,7 @@ data class blyat(
     val startExamsDate: Any,
     val studentGroupDto: StudentGroupDto
 )
-fun blyat.toSchedules() : ScheduleModel {
+fun MainDto.toSchedules() : ScheduleModel {
     val mo = mutableListOf<LessonModel>()
     val tm = mutableListOf<LessonModel>()
     val wm = mutableListOf<LessonModel>()

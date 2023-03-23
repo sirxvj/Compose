@@ -46,7 +46,7 @@ class MainViewModel : ViewModel(){
                     w_state.value = CurrentWeekState(week = result.data)
                 }
                 is Resourse.Error ->{
-                    w_state.value = CurrentWeekState(error = result.message?:"Zalupa")
+                    w_state.value = CurrentWeekState(error = result.message?:"Penis")
                 }
                 is Resourse.Loading -> {
                     w_state.value = CurrentWeekState(isLoading = true)

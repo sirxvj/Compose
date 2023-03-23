@@ -10,6 +10,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -22,6 +23,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.toLowerCase
 import androidx.compose.ui.unit.TextUnit
@@ -61,10 +63,12 @@ fun ScheduleListScreen(
                 .fillMaxWidth()
                 .padding(horizontal = 10.dp, vertical = 10.dp),
             singleLine = true,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             keyboardActions = KeyboardActions(onDone = {
                 viewModel.getPrepods(searchtext.value)
                 viewModel.getCurrentWeek()
-            })
+            },
+            )
         )
         LazyColumn(
             modifier = Modifier
@@ -103,12 +107,25 @@ fun ScheduleListScreen(
                         else dayOfweek+=date.value.dayOfWeek.toString()[n]
 
                     txt = month + " " + date.value.dayOfMonth.toString() + ", " + dayOfweek+ ", week " + cnt.toString()
-                    val hdList = listOf(txt)
-                    items(hdList) { itm ->
-                        Text(
-                            text = itm, color = Color.LightGray,
-                            modifier = Modifier.padding(start = 20.dp, top = 10.dp, bottom = 0.dp)
-                        )
+                    for(n in list){
+                        var found = false
+                        for(j in n.weekNumber!!){
+                            if(j == cnt) {
+                                items(mutableListOf(txt)) { itm ->
+                                    Text(
+                                        text = itm, color = Color.LightGray,
+                                        modifier = Modifier.padding(
+                                            start = 20.dp,
+                                            top = 10.dp,
+                                            bottom = 0.dp
+                                        )
+                                    )
+                                }
+                                found = true
+                                break
+                            }
+                        }
+                        if(found) break
                     }
                     items(list) { iter ->
                         LessonItem(schedule = iter, week = cnt)
@@ -129,6 +146,7 @@ fun ScheduleListScreen(
                 fontSize = 40.sp,
                 color = MaterialTheme.colorScheme.error,
                 textAlign = TextAlign.Center
+            , modifier = Modifier.fillMaxWidth().padding(top =70.dp)
             )
         }
         if (state.isLoading) {
