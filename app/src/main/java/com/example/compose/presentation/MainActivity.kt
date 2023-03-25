@@ -23,17 +23,22 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.example.compose.presentation.list.ScheduleListScreen
+import com.example.compose.presentation.list.SetUpNavGraph
 import org.w3c.dom.Text
 
 
 class MainActivity : ComponentActivity() {
+
+    lateinit var navController: NavHostController
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val viewModel = MainViewModel()
-
+        viewModel.context = this.applicationContext
         setContent {
             ComposeTheme(
                 darkTheme = true,
@@ -41,10 +46,12 @@ class MainActivity : ComponentActivity() {
 
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = Color.DarkGray
+                    color = Color.Black
                 ) {
                 }
-                ScheduleListScreen( viewModel = viewModel)
+                navController = rememberNavController()
+                SetUpNavGraph(navController = navController,viewModel = viewModel)
+                //ScheduleListScreen( viewModel = viewModel)
             }
         }
     }

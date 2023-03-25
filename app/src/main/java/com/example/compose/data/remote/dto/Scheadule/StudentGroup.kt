@@ -1,4 +1,4 @@
-package com.example.compose.data.remote.dto
+package com.example.compose.data.remote.dto.Scheadule
 
 data class StudentGroup(
     val educationDegree: Int,

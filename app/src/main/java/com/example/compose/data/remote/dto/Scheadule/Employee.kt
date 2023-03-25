@@ -1,4 +1,4 @@
-package com.example.compose.data.remote.dto
+package com.example.compose.data.remote.dto.Scheadule
 
 data class Employee(
     val calendarId: String,

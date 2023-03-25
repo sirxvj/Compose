@@ -1,8 +1,8 @@
-package com.example.compose.data.remote.dto
+package com.example.compose.data.remote.dto.Scheadule
 
 import com.example.compose.domain.model.LessonModel
 
-data class Четверг(
+data class Пятница(
     val announcement: Boolean,
     val announcementEnd: Any,
     val announcementStart: Any,
@@ -22,7 +22,7 @@ data class Четверг(
     val subjectFullName: String,
     val weekNumber: List<Int>
 )
-fun Четверг.toLessonModel(): LessonModel {
+fun Пятница.toLessonModel(): LessonModel {
     val str = if(employees.isNotEmpty())
         employees[0].lastName+" "+employees[0].firstName[0]+"."+employees[0].middleName[0]+"."
     else

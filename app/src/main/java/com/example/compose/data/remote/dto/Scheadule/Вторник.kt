@@ -1,4 +1,4 @@
-package com.example.compose.data.remote.dto
+package com.example.compose.data.remote.dto.Scheadule
 import com.example.compose.domain.model.LessonModel
 
 data class Вторник(

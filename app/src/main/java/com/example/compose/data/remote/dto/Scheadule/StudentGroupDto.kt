@@ -1,4 +1,4 @@
-package com.example.compose.data.remote.dto
+package com.example.compose.data.remote.dto.Scheadule
 
 data class StudentGroupDto(
     val calendarId: String,
