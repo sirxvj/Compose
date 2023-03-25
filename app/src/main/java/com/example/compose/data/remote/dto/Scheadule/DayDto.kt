@@ -36,6 +36,7 @@ fun DayDto.toLessonModel(): LessonModel {
         subject = subject,
         subjectFullName = subjectFullName,
         weekNumber = weekNumber,
-        prepodFio = str
+        fio = str,
+        note = note
     )
 }

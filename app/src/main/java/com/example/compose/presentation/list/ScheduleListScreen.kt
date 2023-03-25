@@ -1,16 +1,11 @@
 package com.example.compose.presentation.list
 
-import android.content.Context
-import android.content.SharedPreferences
-import android.util.Log
 import com.example.compose.R
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.AbsoluteRoundedCornerShape
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -23,22 +18,16 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
-import com.example.compose.commmon.constants.ADDEDGROUPS
 import com.example.compose.presentation.MainViewModel
 
 import com.example.compose.presentation.list.component.*
-import com.example.compose.presentation.list.states.GroupState
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.util.*
-import java.util.concurrent.Flow
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -51,6 +40,7 @@ fun ScheduleListScreen(
     }
     val state = viewModel.state.value
     val weekState = viewModel.weekState.value
+    val coroutineScope = rememberCoroutineScope()
     val CurrentGroup = remember {
         mutableStateOf("None")
     }
@@ -82,7 +72,7 @@ fun ScheduleListScreen(
             ) {
 
                 LazyColumn(modifier = Modifier.fillMaxWidth()) {
-                    val Addedlist = viewModel.GetGroups()
+                    val Addedlist = viewModel.getGroups()
                     items(Addedlist) { iter ->
                         Text(
                             text = iter,
@@ -91,7 +81,12 @@ fun ScheduleListScreen(
                             modifier = Modifier
                                 .padding(start = 10.dp, top = 5.dp, bottom = 5.dp)
                                 .fillMaxWidth()
-                                .clickable { viewModel.getScheadule(iter);viewModel.getCurrentWeek(); CurrentGroup.value = iter})
+                                .clickable {
+                                    viewModel.getScheadule(iter);viewModel.getCurrentWeek(); CurrentGroup.value =
+                                    iter
+                                    coroutineScope.launch { sheetState.collapse() }
+                                })
+
                     }
                     item {
                         Row(modifier = Modifier
@@ -176,14 +171,14 @@ fun ScheduleListScreen(
 
                 ) {
 
-                    val it = state.Days!!
+                    @Suppress("NAME_SHADOWING") val it = state.Days!!
                     val date = mutableStateOf(LocalDate.now())
                     date.value = LocalDate.now()
-                    var Upcnt = 0
+                    var upcnt = 0
                     var txt = ""
-                    Upcnt = weekState.week ?: 1
+                    upcnt = weekState.week ?: 1
                     while (date.value.month.value < 6 || (date.value.month.value in 9..12)) {
-                        val cnt = Upcnt
+                        val cnt = upcnt
                         var list = it.MondayList
                         when (date.value.dayOfWeek.value) {
                             1 -> list = it.MondayList
@@ -232,12 +227,12 @@ fun ScheduleListScreen(
                             date.value.plusDays(1)
                         else {
                             date.value = date.value.plusDays(2)
-                            Upcnt++;Upcnt %= 5
-                            if (Upcnt == 0) Upcnt++
+                            upcnt++;upcnt %= 5
+                            if (upcnt == 0) upcnt++
                         }
                     }
                 }
-            } else if(!state.isLoading) {
+            } else if (!state.isLoading) {
                 Text(
                     text = "No Schedule found((((....",
                     fontSize = 20.sp,
@@ -246,10 +241,10 @@ fun ScheduleListScreen(
                         Alignment.Center
                     )
                 )
-                if(viewModel.GetGroups().size>0) {
-//                    viewModel.getScheadule(viewModel.GetGroups()[0])
-//                    viewModel.getCurrentWeek()
-//                    CurrentGroup.value = viewModel.GetGroups()[0]
+                if (viewModel.getGroups().size > 0 && CurrentGroup.value != "None") {
+                    viewModel.getScheadule(CurrentGroup.value)
+                    viewModel.getCurrentWeek()
+                    //CurrentGroup.value = viewModel.getGroups()[0]
                 }
             }
             if (state.error.isNotBlank()) {

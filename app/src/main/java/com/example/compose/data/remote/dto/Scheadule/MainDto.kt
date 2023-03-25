@@ -3,13 +3,13 @@ package com.example.compose.data.remote.dto.Scheadule
 import com.example.compose.domain.model.*
 
 data class MainDto(
-    val employeeDto: Any,
+    val employeeDto: Employee?,
     val endDate: String,
-    val endExamsDate: Any,
+    val endExamsDate: String?,
     val exams: List<Any>,
     val schedules: Schedules,
     val startDate: String,
-    val startExamsDate: Any,
+    val startExamsDate: String?,
     val studentGroupDto: StudentGroupDto
 )
 fun MainDto.toSchedules() : ScheduleModel {

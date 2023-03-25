@@ -1,4 +1,4 @@
-package com.example.compose.data.remote.dto.Group
+package com.example.compose.data.remote.dto.group
 
 import com.example.compose.domain.model.GroupModel
 

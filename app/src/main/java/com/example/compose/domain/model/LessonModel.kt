@@ -9,5 +9,6 @@ data class LessonModel(
     val subject: String?,
     val subjectFullName: String?,
     val weekNumber: List<Int>?,
-    val prepodFio:String
+    val fio:String,
+    val note : String?
 )

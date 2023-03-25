@@ -1,19 +1,19 @@
-package com.example.compose.domain.getSchedulleUseCase
+package com.example.compose.domain.use_case
 
 import com.example.compose.commmon.Resourse
 import com.example.compose.data.repository.RepositoryIMPL
-import com.example.compose.domain.model.ScheduleModel
+import com.example.compose.domain.model.GroupModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import retrofit2.HttpException
 import java.io.IOException
 
-class getCurrentWeekUseCase {
+class getGroupUseCase {
     private val repository = RepositoryIMPL()
-    operator fun invoke(): Flow<Resourse<Int>> = flow{
+    operator fun invoke(): Flow<Resourse<List<GroupModel>>> = flow{
         try {
             emit(Resourse.Loading())
-            val sched = repository.getCurrentWeek()
+            val sched = repository.getGroups()
             emit(Resourse.Success(sched))
         }
         catch (e: HttpException){

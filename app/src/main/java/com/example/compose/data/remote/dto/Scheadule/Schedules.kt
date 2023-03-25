@@ -3,7 +3,6 @@ package com.example.compose.data.remote.dto.Scheadule
 import com.fasterxml.jackson.annotation.JsonAutoDetect
 import com.google.gson.annotations.SerializedName
 
-@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 data class Schedules(
     @SerializedName("Вторник") val Tuesday: List<DayDto>,
     @SerializedName("Понедельник")val Monday: List<DayDto>,

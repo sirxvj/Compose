@@ -20,7 +20,7 @@ import com.example.compose.presentation.list.Screen
 @Composable
 fun GroupItem(group: GroupModel,viewModel: MainViewModel,navController: NavController){
     Column(modifier = Modifier.padding(vertical = 5.dp, horizontal = 20.dp).clickable {
-        viewModel.AddGroup(group.name)
+        viewModel.addGroups(group.name)
         //viewModel.getScheadule(group.name)
         //viewModel.getCurrentWeek()
         navController.navigate(Screen.Home.route)

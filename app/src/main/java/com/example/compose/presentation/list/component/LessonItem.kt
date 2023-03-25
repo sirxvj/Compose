@@ -1,13 +1,10 @@
 package com.example.compose.presentation.list.component
 
-import android.graphics.Paint.Align
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.AbsoluteCutCornerShape
 import androidx.compose.foundation.shape.AbsoluteRoundedCornerShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
@@ -18,14 +15,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.VerticalAlignmentLine
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.compose.data.remote.dto.*
 import com.example.compose.domain.model.*
-import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
 
 @Composable
@@ -33,11 +26,13 @@ fun LessonItem(
     schedule: LessonModel,
     week: Int
 ) {
-    for (n in schedule.weekNumber!!.indices) {
-        if (schedule.weekNumber[n] == week)
-            break
-        if(n == schedule.weekNumber.size-1)
-            return
+    if (schedule.weekNumber != null) {
+        for (n in schedule.weekNumber.indices) {
+            if (schedule.weekNumber[n] == week)
+                break
+            if (n == schedule.weekNumber.size - 1)
+                return
+        }
     }
     Card(
         shape = AbsoluteRoundedCornerShape(15.dp),
@@ -52,7 +47,7 @@ fun LessonItem(
     ) {
         Row() {
             Column(
-               horizontalAlignment = Alignment.End
+                horizontalAlignment = Alignment.End
             ) {
                 Text(
                     text = schedule.startLessonTime.toString(),
@@ -82,38 +77,48 @@ fun LessonItem(
             if (schedule.auditories?.size!! > 0)
                 audit.value = schedule.auditories[0]
             Column() {
+
                 Text(
-                    text = schedule.subject!!,
-                    modifier = Modifier.padding(start = 10.dp, end = 10.dp, top = 13.dp)
+                    text = schedule.subject ?: schedule.note ?: "Хз че тут",
+                    modifier = Modifier.padding(start = 10.dp, end = 0.dp, top = if(schedule.note==null)13.dp
+                    else 8.dp)
                 )
                 Text(
                     text = audit.value,
                     fontSize = 10.sp,
-                    modifier = Modifier.padding(start = 10.dp, end = 10.dp, bottom = 10.dp)
+                    modifier = Modifier.padding(start = 10.dp, end = 0.dp, bottom = 0.dp)
+                )
+                Text(
+                    text = if(schedule.subject!=null)schedule.note?:""
+                    else "",
+                    fontSize = 9.sp,
+                    modifier = Modifier.padding(start = 10.dp, end = 0.dp, bottom = 0.dp)
                 )
             }
-            val shit = remember{mutableStateOf("")}
-            shit.value = "Нед. "
-            for (n in schedule.weekNumber.toString()) {
-                if (n != '[' && n != ']')
-                    shit.value += n
+            val shit = remember { mutableStateOf("") }
+            if (schedule.weekNumber != null) {
+                shit.value = "Нед. "
+                for (n in schedule.weekNumber.toString()) {
+                    if (n != '[' && n != ']')
+                        shit.value += n
+                }
+                if (schedule.weekNumber.size == 4) shit.value = ""
             }
-            if (schedule.weekNumber.size == 4) shit.value = ""
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-            ) {
+//            Column(
+//                modifier = Modifier
+//                    .fillMaxSize()
+//            ) {
                 Text(
-                    text = schedule.prepodFio + "\n" + shit.value,
+                    text = schedule.fio + "\n" + shit.value,
                     fontSize = 12.sp,
                     color = Color.LightGray,
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(end = 10.dp, top = 10.dp),
+                        .padding(end = 9.dp, top = 10.dp),
                     textAlign = TextAlign.End,
                 )
+//            }
 
-            }
         }
 
     }
