@@ -20,12 +20,12 @@ fun MainDto.toSchedules() : ScheduleModel {
     val fr = mutableListOf<LessonModel>()
     val st = mutableListOf<LessonModel>()
     with(schedules){
-        Понедельник.onEach { mnd -> mo.add(mnd.toLessonModel()) }
-        Вторник.onEach { mnd -> tm.add(mnd.toLessonModel()) }
-        Среда.onEach { mnd -> wm.add(mnd.toLessonModel()) }
-        Четверг.onEach { mnd -> th.add(mnd.toLessonModel()) }
-        Пятница.onEach { mnd->fr.add(mnd.toLessonModel()) }
-        Суббота.onEach { mnd -> st.add(mnd.toLessonModel()) }
+        Monday.onEach { mnd -> mo.add(mnd.toLessonModel()) }
+        Tuesday.onEach { mnd -> tm.add(mnd.toLessonModel()) }
+        Wednesday.onEach { mnd -> wm.add(mnd.toLessonModel()) }
+        Thursday.onEach { mnd -> th.add(mnd.toLessonModel()) }
+        DayDto.onEach { mnd->fr.add(mnd.toLessonModel()) }
+        Saturday.onEach { mnd -> st.add(mnd.toLessonModel()) }
     }
     return ScheduleModel(
         MondayList = mo.toList(),

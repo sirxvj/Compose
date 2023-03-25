@@ -106,9 +106,7 @@ fun ScheduleListScreen(
                                     .height(70.dp)
                                     .width(70.dp)
                                     .padding(5.dp)
-
                             )
-
                             Text(
                                 text = "Add new",
                                 fontSize = 30.sp,
@@ -249,9 +247,9 @@ fun ScheduleListScreen(
                     )
                 )
                 if(viewModel.GetGroups().size>0) {
-                    viewModel.getScheadule(viewModel.GetGroups()[0])
-                    viewModel.getCurrentWeek()
-                    CurrentGroup.value = viewModel.GetGroups()[0]
+//                    viewModel.getScheadule(viewModel.GetGroups()[0])
+//                    viewModel.getCurrentWeek()
+//                    CurrentGroup.value = viewModel.GetGroups()[0]
                 }
             }
             if (state.error.isNotBlank()) {

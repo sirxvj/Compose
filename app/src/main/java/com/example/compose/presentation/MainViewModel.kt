@@ -1,5 +1,6 @@
 package com.example.compose.presentation
 
+import android.annotation.SuppressLint
 import android.content.Context
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -28,6 +29,7 @@ class MainViewModel : ViewModel(){
     private val getCurrentWeekUseCase by lazy { getCurrentWeekUseCase()};
     private val GetGroupUseCase by lazy { getGroupUseCase() }
 
+    @SuppressLint("StaticFieldLeak")
     lateinit var context : Context
     val state: State<ScheduleState> = _state
     val weekState : State<CurrentWeekState>  = w_state
