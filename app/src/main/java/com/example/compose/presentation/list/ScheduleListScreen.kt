@@ -188,7 +188,7 @@ fun ScheduleListScreen(
 
                         txt =
                             month + " " + date.value.dayOfMonth.toString() + ", " + dayOfweek + ", week " + cnt.toString()
-                        for (n in list) {
+                        for (n in list?: listOf()) {
                             var found = false
                             for (j in n.weekNumber!!) {
                                 if (j == cnt) {
@@ -208,7 +208,7 @@ fun ScheduleListScreen(
                             }
                             if (found) break
                         }
-                        items(list) { iter ->
+                        items(list?: listOf()) { iter ->
                             LessonItem(schedule = iter, week = cnt)
                         }
                         if (date.value.dayOfWeek.toString() != "SATURDAY") date.value =

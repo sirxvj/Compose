@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.room.Room
 import com.example.compose.commmon.Resourse
 import com.example.compose.commmon.constants.ADDEDGROUPS
+import com.example.compose.data.ScheduleDatabase
 import com.example.compose.domain.use_case.getCurrentWeekUseCase
 import com.example.compose.domain.use_case.getGroupUseCase
 import com.example.compose.domain.use_case.getScheduleUseCase
@@ -69,14 +70,14 @@ class MainViewModel : ViewModel(){
     fun getScheadule(grNum:String){
         val db = Room.databaseBuilder(
             context,
-            ScheduleDataBase::class.java, "schedule-database"
+            ScheduleDatabase::class.java, "schedule-database"
         ).build()
         val schedDao = db.scheduleDao()
         getScheaduleUseCase(grNum).onEach { result->
             when(result){
                 is Resourse.Success->{
                     _state.value = ScheduleState(Days = result.data)
-                    _state.value.Days?.let { schedDao.insertAll(it)}
+                        //    _state.value.Days?.let { schedDao.insertAll(it)}
 
                     val list = schedDao.getAll()
                 }
