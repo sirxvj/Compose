@@ -1,9 +1,9 @@
 package com.example.compose.presentation.list.states
 
-import com.example.compose.domain.model.ScheduleModel
+import com.example.compose.domain.model.ScheduleWithLessons
 
 data class ScheduleState(
     val isLoading: Boolean = false,
-    var Days : ScheduleModel? = null,
+    var Days : ScheduleWithLessons? = null,
     val error:String = ""
 )

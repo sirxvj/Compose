@@ -6,6 +6,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.room.Room
 import com.example.compose.commmon.Resourse
 import com.example.compose.commmon.constants.ADDEDGROUPS
 import com.example.compose.domain.use_case.getCurrentWeekUseCase
@@ -66,13 +67,22 @@ class MainViewModel : ViewModel(){
         }.launchIn(viewModelScope)
     }
     fun getScheadule(grNum:String){
+        val db = Room.databaseBuilder(
+            context,
+            ScheduleDataBase::class.java, "schedule-database"
+        ).build()
+        val schedDao = db.scheduleDao()
         getScheaduleUseCase(grNum).onEach { result->
             when(result){
                 is Resourse.Success->{
                     _state.value = ScheduleState(Days = result.data)
+                    _state.value.Days?.let { schedDao.insertAll(it)}
+
+                    val list = schedDao.getAll()
                 }
                 is Resourse.Error ->{
                     _state.value = ScheduleState(error = result.message?:"Govno")
+                    _state.value = ScheduleState(Days = schedDao.findByNumb(grNum))
                 }
                 is Resourse.Loading -> {
                     _state.value = ScheduleState(isLoading = true)

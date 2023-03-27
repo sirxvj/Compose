@@ -37,6 +37,7 @@ fun DayDto.toLessonModel(): LessonModel {
         subjectFullName = subjectFullName,
         weekNumber = weekNumber,
         fio = str,
-        note = note
+        note = note,
+        scheduleModelGroupNumb = studentGroups[0].name
     )
 }

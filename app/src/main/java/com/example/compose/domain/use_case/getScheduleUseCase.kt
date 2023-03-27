@@ -2,7 +2,7 @@ package com.example.compose.domain.use_case
 
 import com.example.compose.commmon.Resourse
 import com.example.compose.data.repository.RepositoryIMPL
-import com.example.compose.domain.model.ScheduleModel
+import com.example.compose.domain.model.ScheduleWithLessons
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import retrofit2.HttpException
@@ -10,7 +10,7 @@ import java.io.IOException
 
 class getScheduleUseCase {
     private val repository = RepositoryIMPL()
-    operator fun invoke(groupNum:String): Flow<Resourse<ScheduleModel>> = flow{
+    operator fun invoke(groupNum:String): Flow<Resourse<ScheduleWithLessons>> = flow{
         try {
             emit(Resourse.Loading())
             val sched = repository.getSchedule(groupNum)

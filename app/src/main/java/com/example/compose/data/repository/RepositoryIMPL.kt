@@ -7,12 +7,12 @@ import com.example.compose.data.remote.dto.Scheadule.toSchedules
 import com.example.compose.domain.model.GroupModel
 
 
-import com.example.compose.domain.model.ScheduleModel
+import com.example.compose.domain.model.ScheduleWithLessons
 import com.example.compose.domain.repository.Repository
 
 class RepositoryIMPL:Repository {
-    override suspend fun getSchedule(groupNum:String): ScheduleModel {
-        Log.e("TAg",RetrofitInstance.api.getShedule(groupNum).startDate)
+    override suspend fun getSchedule(groupNum:String): ScheduleWithLessons {
+       // Log.e("TAg",RetrofitInstance.api.getShedule(groupNum).startDate)
         val list =  RetrofitInstance.api.getShedule(groupNum)
         Log.e("GG",list.studentGroupDto.name)
         return list.toSchedules()

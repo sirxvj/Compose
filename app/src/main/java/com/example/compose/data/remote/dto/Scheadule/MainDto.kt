@@ -12,7 +12,7 @@ data class MainDto(
     val startExamsDate: String?,
     val studentGroupDto: StudentGroupDto
 )
-fun MainDto.toSchedules() : ScheduleModel {
+fun MainDto.toSchedules() : ScheduleWithLessons {
     val mo = mutableListOf<LessonModel>()
     val tm = mutableListOf<LessonModel>()
     val wm = mutableListOf<LessonModel>()
@@ -20,19 +20,20 @@ fun MainDto.toSchedules() : ScheduleModel {
     val fr = mutableListOf<LessonModel>()
     val st = mutableListOf<LessonModel>()
     with(schedules){
-        Monday.onEach { mnd -> mo.add(mnd.toLessonModel()) }
-        Tuesday.onEach { mnd -> tm.add(mnd.toLessonModel()) }
-        Wednesday.onEach { mnd -> wm.add(mnd.toLessonModel()) }
-        Thursday.onEach { mnd -> th.add(mnd.toLessonModel()) }
-        DayDto.onEach { mnd->fr.add(mnd.toLessonModel()) }
-        Saturday.onEach { mnd -> st.add(mnd.toLessonModel()) }
+        Monday?.onEach { mnd -> mo.add(mnd.toLessonModel()) }
+        Tuesday?.onEach { mnd -> tm.add(mnd.toLessonModel()) }
+        Wednesday?.onEach { mnd -> wm.add(mnd.toLessonModel()) }
+        Thursday?.onEach { mnd -> th.add(mnd.toLessonModel()) }
+        DayDto?.onEach { mnd->fr.add(mnd.toLessonModel()) }
+        Saturday?.onEach { mnd -> st.add(mnd.toLessonModel()) }
     }
-    return ScheduleModel(
+    return ScheduleWithLessons(
+        ScheduleModel(GroupNumb =studentGroupDto.name),
         MondayList = mo.toList(),
         TuesdayList = tm.toList(),
         WednesdayList = wm.toList(),
         ThursdayList = th.toList(),
         FridayList = fr.toList(),
-        SaturdayList = st.toList()
-    )
+        SaturdayList = st.toList())
+
 }

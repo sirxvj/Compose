@@ -104,9 +104,7 @@ fun ScheduleListScreen(
                 }
             }
         },
-
         sheetPeekHeight = 0.dp
-
     ) {
         Box(
             modifier = Modifier
