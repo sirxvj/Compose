@@ -35,18 +35,10 @@ fun ScheduleListScreen(
     viewModel: MainViewModel,
     navController: NavController
 ) {
-    val searchtext = remember {
-        mutableStateOf("")
-    }
     val state = viewModel.state.value
     val weekState = viewModel.weekState.value
     val coroutineScope = rememberCoroutineScope()
-    val CurrentGroup = remember {
-        mutableStateOf("None")
-    }
-    val text = remember {
-        mutableStateOf("sdcnjksdmlkkcsd")
-    }
+    val currentGroup = viewModel.headertext.value
     val sheetState = rememberBottomSheetState(
         initialValue = BottomSheetValue.Collapsed
     )
@@ -72,8 +64,7 @@ fun ScheduleListScreen(
             ) {
 
                 LazyColumn(modifier = Modifier.fillMaxWidth()) {
-                    val Addedlist = viewModel.getGroups()
-                    items(Addedlist) { iter ->
+                    items(viewModel.getGroups()) { iter ->
                         Text(
                             text = iter,
                             fontSize = 30.sp,
@@ -82,7 +73,7 @@ fun ScheduleListScreen(
                                 .padding(start = 10.dp, top = 5.dp, bottom = 5.dp)
                                 .fillMaxWidth()
                                 .clickable {
-                                    viewModel.getScheadule(iter);viewModel.getCurrentWeek(); CurrentGroup.value =
+                                    viewModel.getScheadule(iter);viewModel.getCurrentWeek(); viewModel.headertext.value =
                                     iter
                                     coroutineScope.launch { sheetState.collapse() }
                                 })
@@ -111,8 +102,6 @@ fun ScheduleListScreen(
                         }
                     }
                 }
-
-
             }
         },
 
@@ -155,7 +144,7 @@ fun ScheduleListScreen(
                         // .padding(top = 15.dp, start = 15.dp)
                     )
                     Text(
-                        text = CurrentGroup.value,
+                        text = currentGroup,
                         fontSize = 20.sp,
                         modifier = Modifier.padding(top = 6.dp),
                         color = Color.LightGray
@@ -187,6 +176,7 @@ fun ScheduleListScreen(
                             4 -> list = it.ThursdayList
                             5 -> list = it.FridayList
                             6 -> list = it.SaturdayList
+                            7->date.value.plusDays(1)
                         }
                         var month = ""
                         for (n in date.value.month.toString().indices)
@@ -241,10 +231,15 @@ fun ScheduleListScreen(
                         Alignment.Center
                     )
                 )
-                if (viewModel.getGroups().size > 0 && CurrentGroup.value != "None") {
-                    viewModel.getScheadule(CurrentGroup.value)
+                if (viewModel.getGroups().isNotEmpty() && currentGroup != "None") {
+                    viewModel.getScheadule(currentGroup)
                     viewModel.getCurrentWeek()
                     //CurrentGroup.value = viewModel.getGroups()[0]
+                }
+                else if(viewModel.getGroups().isNotEmpty() && currentGroup == "None"){
+                    viewModel.getCurrentWeek()
+                    viewModel.getScheadule(viewModel.getGroups()[0])
+                    viewModel.headertext.value = viewModel.getGroups()[0];
                 }
             }
             if (state.error.isNotBlank()) {

@@ -33,19 +33,35 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.compose.presentation.MainViewModel
 import com.example.compose.presentation.list.component.GroupItem
+//import com.google.accompanist.pager.ExperimentalPagerApi
+//import com.google.accompanist.pager.HorizontalPager
+//import com.google.accompanist.pager.rememberPagerState
 
+//@OptIn(ExperimentalPagerApi::class)
 @Composable
 fun AddNewScreen(viewModel: MainViewModel, navController: NavController) {
     val searchtext = remember {
         mutableStateOf("")
     }
     val state = viewModel.groupState.value
+
+    val TabItems = listOf("Groups","Prepods")
+//    val pagerState = rememberPagerState()
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.Black)
     ) {
         Column(modifier = Modifier.fillMaxSize()) {
+//            HorizontalPager(count = TabItems.size,
+//            state = pagerState,
+//            modifier = Modifier.fillMaxSize().background(Color.Black))
+//            {
+//             page->
+//                Text(text = TabItems[page], modifier = Modifier.padding(50.dp),color = Color.White)
+//
+//            }
+
             Box(
                 modifier = Modifier
                     .fillMaxWidth()

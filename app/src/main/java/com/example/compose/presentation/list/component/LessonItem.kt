@@ -45,6 +45,7 @@ fun LessonItem(
             defaultElevation = 10.dp
         )
     ) {
+
         Row() {
             Column(
                 horizontalAlignment = Alignment.End
@@ -79,12 +80,12 @@ fun LessonItem(
             Column() {
 
                 Text(
-                    text = schedule.subject ?: schedule.note ?: "Хз че тут",
+                    text = (schedule.subject ?: schedule.note ?: "Хз че тут"),
                     modifier = Modifier.padding(start = 10.dp, end = 0.dp, top = if(schedule.note==null)13.dp
                     else 8.dp)
                 )
                 Text(
-                    text = audit.value,
+                    text = audit.value,//+ if(schedule.numSubgroup!=0){"  (subgr. "+schedule.numSubgroup+")"}else{""},
                     fontSize = 10.sp,
                     modifier = Modifier.padding(start = 10.dp, end = 0.dp, bottom = 0.dp)
                 )
