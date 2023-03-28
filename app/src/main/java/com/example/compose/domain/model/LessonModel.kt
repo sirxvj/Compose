@@ -35,12 +35,12 @@ class StringListConverter {
 }
 class IntegerListConverter {
     @TypeConverter
-    fun fromString(value: String): List<Int> {
-        return value.split(",").map { it.trim().toInt() }
+    fun fromString(value: String?): List<Int>? {
+        return value?.split(",")?.map { it.trim().toInt() }
     }
 
     @TypeConverter
-    fun toString(list: List<Int>): String {
-        return list.joinToString(",")
+    fun toString(list: List<Int>?): String? {
+        return list?.joinToString(",")
     }
 }

@@ -2,8 +2,8 @@ package com.example.compose.data.remote.dto.prepodSchedule
 
 data class EmployeeDto(
     val calendarId: String,
-    val degree: String,
-    val degreeAbbrev: String,
+    val degree: String?,
+    val degreeAbbrev: String?,
     val department: Any,
     val email: Any,
     val firstName: String,
@@ -12,6 +12,6 @@ data class EmployeeDto(
     val lastName: String,
     val middleName: String,
     val photoLink: String,
-    val rank: String,
+    val rank: String?,
     val urlId: String
 )
