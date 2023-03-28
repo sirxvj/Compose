@@ -3,19 +3,37 @@ package com.example.compose.data.repository
 import android.util.Log
 import com.example.compose.data.RetrofitInstance
 import com.example.compose.data.remote.dto.group.toGroupModel
-import com.example.compose.data.remote.dto.Scheadule.toSchedules
+import com.example.compose.data.remote.dto.Scheadule.toLessonList
+import com.example.compose.data.remote.dto.prepod.toPrepodModel
+import com.example.compose.data.remote.dto.prepodSchedule.toLessonList
 import com.example.compose.domain.model.GroupModel
+import com.example.compose.domain.model.LessonModel
+import com.example.compose.domain.model.PrepodModel
 
 
-import com.example.compose.domain.model.ScheduleWithLessons
 import com.example.compose.domain.repository.Repository
 
 class RepositoryIMPL:Repository {
-    override suspend fun getSchedule(groupNum:String): ScheduleWithLessons {
+    override suspend fun getSchedule(groupNum:String): List<LessonModel> {
        // Log.e("TAg",RetrofitInstance.api.getShedule(groupNum).startDate)
         val list =  RetrofitInstance.api.getShedule(groupNum)
         Log.e("GG",list.studentGroupDto.name)
-        return list.toSchedules()
+        return list.toLessonList()
+    }
+    override suspend fun getPrepSchedule(urlid:String): List<LessonModel> {
+        // Log.e("TAg",RetrofitInstance.api.getShedule(groupNum).startDate)
+        val list =  RetrofitInstance.api.getPrepShedule(urlid)
+        Log.e("GG",list.employeeDto.lastName)
+        return list.toLessonList()
+    }
+
+    override suspend fun getPrepods(): List<PrepodModel> {
+        val ml : MutableList<PrepodModel> = mutableListOf();
+        for(a in RetrofitInstance.api.getPrepod()){
+            ml.add(a.toPrepodModel())
+        }
+        Log.e("sdfsdfsd",ml[0].fio)
+        return ml
     }
 
     override suspend fun getGroups(): List<GroupModel> {

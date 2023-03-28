@@ -39,6 +39,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         val viewModel = MainViewModel()
         viewModel.context = this.applicationContext
+        viewModel.getCurrentWeek()
         setContent {
             ComposeTheme(
                 darkTheme = true,

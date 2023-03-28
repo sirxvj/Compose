@@ -1,4 +1,4 @@
-package com.example.compose.presentation.list.states
+package com.example.compose.presentation.states
 
 import com.example.compose.domain.model.GroupModel
 

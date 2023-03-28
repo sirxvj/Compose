@@ -22,12 +22,13 @@ data class DayDto(
     val subjectFullName: String,
     val weekNumber: List<Int>
 )
-fun DayDto.toLessonModel(): LessonModel {
+fun DayDto.toLessonModel(weekDay:String): LessonModel {
     val str = if(employees.isNotEmpty())
         employees[0].lastName+" "+employees[0].firstName[0]+"."+employees[0].middleName[0]+"."
     else
         ""
     return LessonModel(
+        id = studentGroups[0].name,
         auditories = auditories,
         endLessonTime = endLessonTime,
         lessonTypeAbbrev = lessonTypeAbbrev,
@@ -38,6 +39,6 @@ fun DayDto.toLessonModel(): LessonModel {
         weekNumber = weekNumber,
         fio = str,
         note = note,
-        scheduleModelGroupNumb = studentGroups[0].name
+        weekDay = weekDay
     )
 }

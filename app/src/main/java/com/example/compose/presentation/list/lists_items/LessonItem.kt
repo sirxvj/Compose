@@ -105,10 +105,6 @@ fun LessonItem(
                 }
                 if (schedule.weekNumber.size == 4) shit.value = ""
             }
-//            Column(
-//                modifier = Modifier
-//                    .fillMaxSize()
-//            ) {
                 Text(
                     text = schedule.fio + "\n" + shit.value,
                     fontSize = 12.sp,
@@ -118,7 +114,6 @@ fun LessonItem(
                         .padding(end = 9.dp, top = 10.dp),
                     textAlign = TextAlign.End,
                 )
-//            }
 
         }
 

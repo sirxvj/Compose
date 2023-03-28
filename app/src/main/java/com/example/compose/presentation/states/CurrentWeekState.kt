@@ -1,4 +1,4 @@
-package com.example.compose.presentation.list.states
+package com.example.compose.presentation.states
 
 data class CurrentWeekState(
     val isLoading: Boolean = false,

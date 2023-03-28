@@ -1,5 +1,6 @@
 package com.example.compose.presentation.list
 
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -13,6 +14,7 @@ import androidx.compose.material.*
 import androidx.compose.material3.CircularProgressIndicator
 import com.example.compose.R
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -33,11 +35,20 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.compose.presentation.MainViewModel
 import com.example.compose.presentation.list.component.GroupItem
+import com.example.compose.presentation.list.component.addingPrepod
+import com.example.compose.presentation.list.component.adding_newGroup
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.rememberPagerState
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.yield
+
 //import com.google.accompanist.pager.ExperimentalPagerApi
 //import com.google.accompanist.pager.HorizontalPager
 //import com.google.accompanist.pager.rememberPagerState
 
 //@OptIn(ExperimentalPagerApi::class)
+@OptIn(ExperimentalPagerApi::class)
 @Composable
 fun AddNewScreen(viewModel: MainViewModel, navController: NavController) {
     val searchtext = remember {
@@ -46,22 +57,27 @@ fun AddNewScreen(viewModel: MainViewModel, navController: NavController) {
     val state = viewModel.groupState.value
 
     val TabItems = listOf("Groups","Prepods")
-//    val pagerState = rememberPagerState()
+    val pagerState = rememberPagerState(
+        pageCount = 2,
+        initialPage = 0
+    )
+//    LaunchedEffect(Unit){
+//        while (true){
+//            yield()
+//            delay(2000)
+//            pagerState.animateScrollToPage(
+//                page = 0,
+//                animationSpec = tween(800)
+//            )
+//        }
+//    }
+    
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.Black)
     ) {
         Column(modifier = Modifier.fillMaxSize()) {
-//            HorizontalPager(count = TabItems.size,
-//            state = pagerState,
-//            modifier = Modifier.fillMaxSize().background(Color.Black))
-//            {
-//             page->
-//                Text(text = TabItems[page], modifier = Modifier.padding(50.dp),color = Color.White)
-//
-//            }
-
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -86,42 +102,19 @@ fun AddNewScreen(viewModel: MainViewModel, navController: NavController) {
                     )
                 }
             }
-            OutlinedTextField(
-                value = searchtext.value,
-                shape = androidx.compose.material3.MaterialTheme.shapes.extraLarge,
-                onValueChange = { newText ->
-                    searchtext.value = newText
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 10.dp, vertical = 5.dp)
-                    .background(Color.Black),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                singleLine = true,
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    focusedBorderColor = MaterialTheme.colors.background,
-                    unfocusedBorderColor = MaterialTheme.colors.background,
-                    focusedLabelColor = MaterialTheme.colors.primary,
-                    cursorColor = MaterialTheme.colors.background
-                ),
-                textStyle = TextStyle(color = Color.LightGray)
-            )
+            HorizontalPager(state = pagerState
+            ) {
+                page->
+                if(page==1){
+                    addingPrepod(viewModel = viewModel,navController = navController)
+                }
+                else {
+                    adding_newGroup(viewModel = viewModel, navController = navController)
 
-            if (state.Groups.isNotEmpty()) {
-                LazyColumn(modifier = Modifier.fillMaxWidth()) {
-                    items(state.Groups){itm->
-                       if(itm.name.contains(searchtext.value)) GroupItem(group = itm,viewModel,navController)
-                    }
                 }
             }
-            else
-                viewModel.getGroup()
 
         }
-        if (state.isLoading) {
-            CircularProgressIndicator(modifier = Modifier.align(Center))
-        }
-        if(state.error.isNotBlank())
-            Text(text = "Something went wrong..."+state.error,fontSize = 20.sp, modifier = Modifier.align(Center),color = Color.LightGray)
+
     }
 }

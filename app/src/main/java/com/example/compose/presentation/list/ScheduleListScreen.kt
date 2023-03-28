@@ -1,5 +1,7 @@
 package com.example.compose.presentation.list
 
+import android.annotation.SuppressLint
+import android.util.Log
 import com.example.compose.R
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -22,6 +24,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.compose.domain.model.LessonModel
 import com.example.compose.presentation.MainViewModel
 
 import com.example.compose.presentation.list.component.*
@@ -29,6 +32,7 @@ import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.util.*
 
+@SuppressLint("MutableCollectionMutableState")
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ScheduleListScreen(
@@ -46,10 +50,11 @@ fun ScheduleListScreen(
         bottomSheetState = sheetState
     )
     val scope = rememberCoroutineScope()
-
+    val currentScheadule = viewModel.state.value.Days ?: emptyList()
     val barClickedState = remember {
         mutableStateOf(false)
     }
+
     BottomSheetScaffold(
         scaffoldState = scaffoldState,
         sheetBackgroundColor = Color.Transparent,
@@ -62,46 +67,12 @@ fun ScheduleListScreen(
                     .background(Color.DarkGray)
 
             ) {
-
-                LazyColumn(modifier = Modifier.fillMaxWidth()) {
-                    items(viewModel.getGroups()) { iter ->
-                        Text(
-                            text = iter,
-                            fontSize = 30.sp,
-                            color = Color.LightGray,
-                            modifier = Modifier
-                                .padding(start = 10.dp, top = 5.dp, bottom = 5.dp)
-                                .fillMaxWidth()
-                                .clickable {
-                                    viewModel.getScheadule(iter);viewModel.getCurrentWeek(); viewModel.headertext.value =
-                                    iter
-                                    coroutineScope.launch { sheetState.collapse() }
-                                })
-
-                    }
-                    item {
-                        Row(modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable {
-                                navController.navigate(route = Screen.Search.route)
-                            }) {
-                            Image(
-                                imageVector = ImageVector.vectorResource(R.drawable.plus),
-                                contentDescription = "fghjk",
-                                modifier = Modifier
-                                    .height(70.dp)
-                                    .width(70.dp)
-                                    .padding(5.dp)
-                            )
-                            Text(
-                                text = "Add new",
-                                fontSize = 30.sp,
-                                color = Color.LightGray,
-                                modifier = Modifier.align(CenterVertically)
-                            )
-                        }
-                    }
-                }
+                BottomSHIIT(
+                    viewModel = viewModel,
+                    navController = navController,
+                    coroutineScope =coroutineScope,
+                    sheetState = sheetState
+                )
             }
         },
         sheetPeekHeight = 0.dp
@@ -149,77 +120,8 @@ fun ScheduleListScreen(
                     )
                 }
             }
-            if (state.Days != null && weekState.week != null) {
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 60.dp)
-                        .background(Color.Black)
-
-                ) {
-
-                    @Suppress("NAME_SHADOWING") val it = state.Days!!
-                    val date = mutableStateOf(LocalDate.now())
-                    date.value = LocalDate.now()
-                    var upcnt = 0
-                    var txt = ""
-                    upcnt = weekState.week ?: 1
-                    while (date.value.month.value < 6 || (date.value.month.value in 9..12)) {
-                        val cnt = upcnt
-                        var list = it.MondayList
-                        when (date.value.dayOfWeek.value) {
-                            1 -> list = it.MondayList
-                            2 -> list = it.TuesdayList
-                            3 -> list = it.WednesdayList
-                            4 -> list = it.ThursdayList
-                            5 -> list = it.FridayList
-                            6 -> list = it.SaturdayList
-                            7->date.value.plusDays(1)
-                        }
-                        var month = ""
-                        for (n in date.value.month.toString().indices)
-                            if (n > 0) month += date.value.month.toString()[n].lowercase()
-                            else month += date.value.month.toString()[n]
-
-                        var dayOfweek = ""
-                        for (n in date.value.dayOfWeek.toString().indices)
-                            if (n > 0) dayOfweek += date.value.dayOfWeek.toString()[n].lowercase()
-                            else dayOfweek += date.value.dayOfWeek.toString()[n]
-
-                        txt =
-                            month + " " + date.value.dayOfMonth.toString() + ", " + dayOfweek + ", week " + cnt.toString()
-                        for (n in list?: listOf()) {
-                            var found = false
-                            for (j in n.weekNumber!!) {
-                                if (j == cnt) {
-                                    items(mutableListOf(txt)) { itm ->
-                                        Text(
-                                            text = itm, color = Color.LightGray,
-                                            modifier = Modifier.padding(
-                                                start = 20.dp,
-                                                top = 10.dp,
-                                                bottom = 0.dp
-                                            )
-                                        )
-                                    }
-                                    found = true
-                                    break
-                                }
-                            }
-                            if (found) break
-                        }
-                        items(list?: listOf()) { iter ->
-                            LessonItem(schedule = iter, week = cnt)
-                        }
-                        if (date.value.dayOfWeek.toString() != "SATURDAY") date.value =
-                            date.value.plusDays(1)
-                        else {
-                            date.value = date.value.plusDays(2)
-                            upcnt++;upcnt %= 5
-                            if (upcnt == 0) upcnt++
-                        }
-                    }
-                }
+            if (state.Days?.isNotEmpty() == true) {
+                ScheduleColumn(viewModel = viewModel)
             } else if (!state.isLoading) {
                 Text(
                     text = "No Schedule found((((....",
@@ -229,16 +131,6 @@ fun ScheduleListScreen(
                         Alignment.Center
                     )
                 )
-                if (viewModel.getGroups().isNotEmpty() && currentGroup != "None") {
-                    viewModel.getScheadule(currentGroup)
-                    viewModel.getCurrentWeek()
-                    //CurrentGroup.value = viewModel.getGroups()[0]
-                }
-                else if(viewModel.getGroups().isNotEmpty() && currentGroup == "None"){
-                    viewModel.getCurrentWeek()
-                    viewModel.getScheadule(viewModel.getGroups()[0])
-                    viewModel.headertext.value = viewModel.getGroups()[0];
-                }
             }
             if (state.error.isNotBlank()) {
                 Text(
@@ -253,6 +145,7 @@ fun ScheduleListScreen(
             if (state.isLoading) {
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
             }
+
         }
     }
 }
