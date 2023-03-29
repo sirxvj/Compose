@@ -85,7 +85,8 @@ fun ScheduleListScreen(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(60.dp)
+                    .height(60.dp).
+                        clip(shape = AbsoluteRoundedCornerShape(0.dp,0.dp,10.dp,10.dp))
                     .background(Color(0xff212121))
                     .padding(start = 10.dp, top = 10.dp)
             ) {
