@@ -55,9 +55,9 @@ fun ScheduleColumn(viewModel: MainViewModel){
             var end = false
             txt = month + " " + date.value.dayOfMonth.toString() + ", " + dayOfweek + ", week " + cnt.toString()
             for (n in currentScheadule) {
-                if (n.weekDay == downDate.value.dayOfWeek.toString() && n.weekNumber?.contains(
+                if (n.weekDay == downDate.value.dayOfWeek.toString() && ((n.weekNumber?.contains(
                         cnt
-                    ) == true
+                    ) == true)||(n.weekNumber==null))
                 ) {
                     if (!firstStep) {
                         items(mutableListOf(txt)) { itm ->

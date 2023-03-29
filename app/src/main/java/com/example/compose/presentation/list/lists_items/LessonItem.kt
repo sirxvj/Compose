@@ -36,6 +36,9 @@ fun LessonItem(
     }
     Card(
         shape = AbsoluteRoundedCornerShape(15.dp),
+        colors = CardDefaults.cardColors(
+            containerColor =  Color(0xff212121),
+        ),
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 10.dp, vertical = 5.dp)
@@ -52,11 +55,13 @@ fun LessonItem(
             ) {
                 Text(
                     text = schedule.startLessonTime.toString(),
+                    color = Color.LightGray,
                     fontSize = 14.sp,
                     modifier = Modifier.padding(top = 13.dp, start = 10.dp)
                 )
                 Text(
                     text = schedule.endLessonTime.toString(),
+                    color = Color.LightGray,
                     fontSize = 12.sp,
                     modifier = Modifier.padding(bottom = 10.dp, start = 10.dp)
                 )
@@ -81,18 +86,21 @@ fun LessonItem(
 
                 Text(
                     text = (schedule.subject ?: schedule.note ?: "Хз че тут"),
+                    color = Color.LightGray,
                     modifier = Modifier.padding(start = 10.dp, end = 0.dp, top = if(schedule.note==null)13.dp
                     else 8.dp)
                 )
                 Text(
                     text = audit.value,//+ if(schedule.numSubgroup!=0){"  (subgr. "+schedule.numSubgroup+")"}else{""},
                     fontSize = 10.sp,
+                    color = Color.LightGray,
                     modifier = Modifier.padding(start = 10.dp, end = 0.dp, bottom = 0.dp)
                 )
                 Text(
                     text = if(schedule.subject!=null)schedule.note?:""
                     else "",
                     fontSize = 9.sp,
+                    color = Color.LightGray,
                     modifier = Modifier.padding(start = 10.dp, end = 0.dp, bottom = 0.dp)
                 )
             }

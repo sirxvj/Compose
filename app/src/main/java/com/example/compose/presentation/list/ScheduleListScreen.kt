@@ -64,7 +64,7 @@ fun ScheduleListScreen(
                     .fillMaxWidth()
                     // .height(300.dp)
                     .clip(shape = AbsoluteRoundedCornerShape(20.dp))
-                    .background(Color.DarkGray)
+                    .background(Color(0xff212121))
 
             ) {
                 BottomSHIIT(
@@ -86,7 +86,7 @@ fun ScheduleListScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(60.dp)
-                    .background(Color.DarkGray)
+                    .background(Color(0xff212121))
                     .padding(start = 10.dp, top = 10.dp)
             ) {
                 Row(modifier = Modifier

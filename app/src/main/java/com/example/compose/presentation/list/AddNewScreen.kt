@@ -82,7 +82,7 @@ fun AddNewScreen(viewModel: MainViewModel, navController: NavController) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(60.dp)
-                    .background(Color.DarkGray)
+                    .background(Color(0xff212121))
                     .padding(start = 10.dp, top = 10.dp)
             ) {
 
